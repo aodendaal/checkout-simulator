@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 225890963293935768}
   - component: {fileID: 114552926911275428}
   m_Layer: 5
-  m_Name: Something
+  m_Name: Rice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,14 +43,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.94509804, g: 0.67340523, b: 0.29019606, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 34c4566bb24717a46861a4592f666ce7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c845100c8f8ca4f4190bc372312ed757, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -69,8 +69,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c3826ed1b906294dbad35f2deb9b29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: Something
-  price: 3.35
+  displayName: Rice
+  price: 16.99
 --- !u!114 &114943891371977976
 MonoBehaviour:
   m_ObjectHideFlags: 1

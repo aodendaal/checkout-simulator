@@ -16,7 +16,16 @@ public class DropSlot : MonoBehaviour, IDropHandler
         }
         else
         {
-            gridTransform = transform.Find("Grid").transform;
+            var grid = transform.Find("Grid");
+
+            if (grid != null)
+            {
+                gridTransform = grid.transform;
+            }
+            else
+            {
+                gridTransform = transform;
+            }
         }
     }
     public void OnDrop(PointerEventData eventData)

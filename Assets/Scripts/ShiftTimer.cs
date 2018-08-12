@@ -7,17 +7,30 @@ public class ShiftTimer : MonoBehaviour
     [Header("Display")]
     public Text shiftTimeDisplay;
 
+    [Header("Start Panel")]
+    public GameObject startPanel;
+    public Text startPanelTitle;
+    public Text startPanelDescription;
+
     [Header("Panels")]
-    public GameObject infoPanel;
     public GameObject resultPanel;
     public GameObject pausePanel;
 
+    private CheckoutManager manager;
+
     private bool isPlaying = false;
-    private float shiftSeconds = 2f * 60f;
+    private float totalShiftSeconds = 2f * 60f;
+    private float shiftSeconds;
+    private int day = 1;
 
     private void Start()
     {
-        infoPanel.SetActive(true);
+        manager = GetComponent<CheckoutManager>();
+
+        startPanelTitle.text = "Day 1 - Express Lane";
+        startPanelDescription.text = "10 Items or Fewer";
+        startPanel.SetActive(true);
+
         resultPanel.SetActive(false);
         pausePanel.SetActive(false);
     }
@@ -45,8 +58,9 @@ public class ShiftTimer : MonoBehaviour
 
     public void StartGame_Click()
     {
-        infoPanel.SetActive(false);
-        
+        startPanel.SetActive(false);
+
+        shiftSeconds = totalShiftSeconds;
         isPlaying = true;
     }
 
@@ -66,7 +80,26 @@ public class ShiftTimer : MonoBehaviour
 
     public void NextGame_Click()
     {
-        SceneManager.LoadScene(1);
+
+        isPlaying = false;
+
+        day++;
+
+        manager.NextDay(day);
+
+        if (day % 5 == 0)
+        {
+            startPanelTitle.text = string.Format("Day {0} - Sale", day);
+            startPanelDescription.text = "Super Sale Day";
+        }
+        else
+        {
+            startPanelTitle.text = string.Format("Day {0}", day);
+            startPanelDescription.text = "";
+        }
+
+        resultPanel.SetActive(false);
+        startPanel.SetActive(true);
     }
 
     public void RestartGame_Click()

@@ -18,7 +18,7 @@ public class Scanner : MonoBehaviour, IPointerEnterHandler
     private float lightTime;
     private float lightRate = 0.5f;
 
-    private List<Description> items = new List<Description>();
+    public List<Description> Items = new List<Description>();
 
     void Start()
     {
@@ -46,7 +46,7 @@ public class Scanner : MonoBehaviour, IPointerEnterHandler
         {
             var item = DragHandler.ItemBeingDragged.GetComponent<Description>();
 
-            items.Add(item);
+            Items.Add(item);
 
             UpdateText();
 
@@ -57,13 +57,13 @@ public class Scanner : MonoBehaviour, IPointerEnterHandler
 
     private void UpdateText()
     {
-        var text = items.GroupBy(i => i.displayName)
+        var text = Items.GroupBy(i => i.displayName)
                           .OrderBy(i => i.Key)
                           .Select(g => g.Key.PadRight(50) + " x" + g.Count().ToString().PadRight(20) + (g.First().price * g.Count()).ToString("0.00"))
                           .Aggregate((a, n) => a + "\n" + n);
 
         text += "\n---------------------------------------------";
-        text += "\n" + "Total".PadRight(83) + items.Sum(i => i.price).ToString("0.00");
+        text += "\n" + "Total".PadRight(83) + Items.Sum(i => i.price).ToString("0.00");
 
         checkoutText.text = text;
     }
@@ -85,7 +85,7 @@ public class Scanner : MonoBehaviour, IPointerEnterHandler
 
     public void Clear()
     {
-        items.Clear();
+        Items.Clear();
         checkoutText.text = string.Empty;
     }
 }

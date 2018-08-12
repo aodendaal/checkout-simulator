@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class CheckoutManager : MonoBehaviour
 {
-
     [Header("Panels")]
+    public Transform conveyerTransform;
     public Scanner scanner;
+    public Text resultText;
 
     [Header("Buttons")]
     public GameObject nextButton;
@@ -17,33 +19,69 @@ public class CheckoutManager : MonoBehaviour
 
     [Header("Items")]
     public GameObject[] itemPrefabs;
-
-    private Transform trolleyGridTransform;
-
+    
     private List<GameObject> items = new List<GameObject>();
+
+    private AudioSource nextSource;
+    private AudioSource successSource;
+    private AudioSource failSource;
+
+    private int day = 1;
+
+    private int score = 0;
+    private int total = 0;
 
     // Use this for initialization
     void Start()
     {
-        trolleyGridTransform = GameObject.Find("Trolley").transform.Find("Grid");
+        AssignAudioSources();
 
         nextButton.SetActive(true);
         checkoutButton.SetActive(false);
     }
 
+    private void AssignAudioSources()
+    {
+        var sounds = GetComponents<AudioSource>();
+        nextSource = sounds[0];
+        successSource = sounds[1];
+        failSource = sounds[2];
+    }
+
     public void Next_Click()
     {
-        var count = Random.Range(1, 11);
+        nextSource.Play();
+
+        var parentTransform = conveyerTransform as RectTransform;
+        var height = parentTransform.rect.height;
+
+        var count = 0;
+        if (day == 1)
+        {
+            count = Random.Range(1, 11);
+        }
+        else if (day % 5 == 0)
+        {
+            count = Random.Range(5, 31);
+        }
+        else
+        {
+            count = Random.Range(3, 17);
+        }
 
         for (int i = 0; i < count; i++)
         {
             var prefab = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
-            var go = Instantiate(prefab, trolleyGridTransform.position, Quaternion.identity);
 
-            go.transform.SetParent(trolleyGridTransform);
+            var go = Instantiate(prefab, parentTransform, false);
+
+            go.transform.position -= new Vector3(Random.Range(-50f, 0f), Random.Range(0f, height - 50f), 0f);
 
             items.Add(go);
         }
+
+        total++;
+        UpdateResult();
 
         nextButton.SetActive(false);
         checkoutButton.SetActive(true);
@@ -52,19 +90,50 @@ public class CheckoutManager : MonoBehaviour
 
     public void Checkout_Click()
     {
-        Checkccuracy();
+        CheckAccuracy();
 
+        ClearItems();
+    }
+
+    private void ClearItems()
+    {
         foreach (var item in items)
         {
             Destroy(item);
         }
 
+        items.Clear();
+
         nextButton.SetActive(true);
         checkoutButton.SetActive(false);
     }
 
-    private void Checkccuracy()
+    private void CheckAccuracy()
     {
-        throw new NotImplementedException();
+        if (scanner.Items.Count != items.Count)
+        {
+            failSource.Play();
+            return;
+        }
+
+        score += 1;
+        UpdateResult();
+
+        successSource.Play();
+    }
+
+    private void UpdateResult()
+    {
+        resultText.text = string.Format("You scored {0}% out of {1}", Mathf.FloorToInt((float)score / (float)total * 100f), total);
+    }
+
+    public void NextDay(int day)
+    {
+        this.day = day;
+
+        score = 0;
+        total = 0;
+
+        ClearItems();
     }
 }
