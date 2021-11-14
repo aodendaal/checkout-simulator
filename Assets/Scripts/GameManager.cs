@@ -3,13 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class CheckoutManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     [Header("Panels")]
-    public Transform conveyerTransform;
+    [FormerlySerializedAs("conveyerTransform")] 
+    public Transform conveyorTransform;
     public Scanner scanner;
     public Text resultText;
 
@@ -22,9 +24,10 @@ public class CheckoutManager : MonoBehaviour
     
     private List<GameObject> items = new List<GameObject>();
 
-    private AudioSource nextSource;
-    private AudioSource successSource;
-    private AudioSource failSource;
+    private AudioSource audioSource;
+    private AudioClip nextClip;
+    private AudioClip successClip;
+    private AudioClip failClip;
 
     private int day = 1;
 
@@ -34,25 +37,26 @@ public class CheckoutManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        AssignAudioSources();
+        audioSource = GetComponent<AudioSource>();
+        AssignAudioClips();
 
         nextButton.SetActive(true);
         checkoutButton.SetActive(false);
     }
 
-    private void AssignAudioSources()
+    private void AssignAudioClips()
     {
-        var sounds = GetComponents<AudioSource>();
-        nextSource = sounds[0];
-        successSource = sounds[1];
-        failSource = sounds[2];
+        nextClip = Resources.Load<AudioClip>("next");
+        successClip = Resources.Load<AudioClip>("success");
+        failClip = Resources.Load<AudioClip>("fail");
     }
 
     public void Next_Click()
     {
-        nextSource.Play();
+        audioSource.clip = nextClip;
+        audioSource.Play();
 
-        var parentTransform = conveyerTransform as RectTransform;
+        var parentTransform = conveyorTransform as RectTransform;
         var height = parentTransform.rect.height;
 
         var count = 0;
@@ -112,19 +116,30 @@ public class CheckoutManager : MonoBehaviour
     {
         if (scanner.Items.Count != items.Count)
         {
-            failSource.Play();
-            return;
+            FailCheckout();
         }
 
+        SucceedCheckout();
+    }
+
+    private void FailCheckout()
+    {
+        audioSource.clip = failClip;
+        audioSource.Play();
+    }
+
+    private void SucceedCheckout()
+    {
         score += 1;
         UpdateResult();
 
-        successSource.Play();
+        audioSource.clip = successClip;
+        audioSource.Play();
     }
 
     private void UpdateResult()
     {
-        resultText.text = string.Format("You scored {0}% out of {1}", Mathf.FloorToInt((float)score / (float)total * 100f), total);
+        resultText.text = $"You scored {Mathf.FloorToInt((float) score / (float) total * 100f)}% out of {total}";
     }
 
     public void NextDay(int day)

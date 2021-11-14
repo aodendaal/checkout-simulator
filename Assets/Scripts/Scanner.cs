@@ -59,11 +59,11 @@ public class Scanner : MonoBehaviour, IPointerEnterHandler
     {
         var text = Items.GroupBy(i => i.displayName)
                           .OrderBy(i => i.Key)
-                          .Select(g => g.Key.PadRight(50) + " x" + g.Count().ToString().PadRight(20) + (g.First().price * g.Count()).ToString("0.00"))
+                          .Select(g => g.Key.PadRight(20) + " x" + g.Count().ToString().PadRight(5) + (g.First().price * g.Count()).ToString("0.00").PadLeft(6))
                           .Aggregate((a, n) => a + "\n" + n);
 
-        text += "\n---------------------------------------------";
-        text += "\n" + "Total".PadRight(83) + Items.Sum(i => i.price).ToString("0.00");
+        text += "\n---------------------------------";
+        text += "\n" + "Total".PadRight(25) + Items.Sum(i => i.price).ToString("0.00").PadLeft(8);
 
         checkoutText.text = text;
     }

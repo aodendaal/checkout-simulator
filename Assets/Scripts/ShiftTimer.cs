@@ -16,7 +16,7 @@ public class ShiftTimer : MonoBehaviour
     public GameObject resultPanel;
     public GameObject pausePanel;
 
-    private CheckoutManager manager;
+    private GameManager manager;
 
     private bool isPlaying = false;
     private float totalShiftSeconds = 2f * 60f;
@@ -25,7 +25,7 @@ public class ShiftTimer : MonoBehaviour
 
     private void Start()
     {
-        manager = GetComponent<CheckoutManager>();
+        manager = GetComponent<GameManager>();
 
         startPanelTitle.text = "Day 1 - Express Lane";
         startPanelDescription.text = "10 Items or Fewer";
@@ -89,12 +89,12 @@ public class ShiftTimer : MonoBehaviour
 
         if (day % 5 == 0)
         {
-            startPanelTitle.text = string.Format("Day {0} - Sale", day);
+            startPanelTitle.text = $"Day {day} - Sale";
             startPanelDescription.text = "Super Sale Day";
         }
         else
         {
-            startPanelTitle.text = string.Format("Day {0}", day);
+            startPanelTitle.text = $"Day {day}";
             startPanelDescription.text = "";
         }
 
