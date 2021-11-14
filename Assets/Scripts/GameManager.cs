@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
 
             var go = Instantiate(prefab, parentTransform, false);
 
-            go.transform.position -= new Vector3(Random.Range(-50f, 0f), Random.Range(0f, height - 50f), 0f);
+            go.transform.position -= new Vector3(Random.Range(-50f, 50f), Random.Range(0f, height - 100f), 0f);
 
             items.Add(go);
         }
